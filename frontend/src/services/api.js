@@ -2,7 +2,8 @@
  * API Client for SIH26057 Sonar Detection Pipeline.
  */
 
-const API_BASE = '/api';
+const RAW_API_BASE = import.meta.env.VITE_API_URL || '';
+const API_BASE = RAW_API_BASE ? `${RAW_API_BASE.replace(/\/+$/, '')}/api` : '/api';
 
 export async function getHealth() {
   const res = await fetch(`${API_BASE}/health`);

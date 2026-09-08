@@ -5,7 +5,8 @@
  * human operator map confirmation workflows, and safe AIS risk correlation.
  */
 
-const API_BASE = '/api/incidents';
+const RAW_API_BASE = import.meta.env.VITE_API_URL || '';
+const API_BASE = RAW_API_BASE ? `${RAW_API_BASE.replace(/\/+$/, '')}/api/incidents` : '/api/incidents';
 
 export async function getIncidents(params = {}) {
   const query = new URLSearchParams();

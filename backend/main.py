@@ -7,6 +7,7 @@ from pathlib import Path
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 
 from backend.api.routes import router as api_router
 from backend.api.geospatial_routes import router as geospatial_router
@@ -77,20 +78,58 @@ app.include_router(ais_router, prefix=settings.API_PREFIX)
 app.include_router(ais_demo_router, prefix=settings.API_PREFIX)
 app.include_router(incident_router, prefix=settings.API_PREFIX)
 
-# Serve uploaded / processed static files if needed
+# Serve uploaded / processed static files
 app.mount("/static/uploads", StaticFiles(directory=str(settings.UPLOAD_DIR)), name="uploads")
 
+# Direct report download endpoints
+@app.get("/api/download/report-pdf", summary="Download Complete Technical Specification PDF")
+async def download_report_pdf():
+    pdf_path = settings.BASE_DIR / "SAMUDRA_RAKSHAK_COMPLETE_TECH_SPEC.pdf"
+    if pdf_path.exists():
+        return FileResponse(
+            str(pdf_path),
+            media_type="application/pdf",
+            filename="SAMUDRA_RAKSHAK_COMPLETE_TECH_SPEC.pdf",
+        )
+    return {"error": "Report PDF not found on disk"}
 
-@app.get("/", summary="Root Health Status")
-async def root():
-    return {
-        "service": settings.PROJECT_NAME,
-        "status": "online",
-        "docs": "/docs",
-        "api": f"{settings.API_PREFIX}/health",
-    }
+@app.get("/api/download/report-html", summary="Download Complete Technical Specification HTML")
+async def download_report_html():
+    html_path = settings.BASE_DIR / "SAMUDRA_RAKSHAK_COMPLETE_TECH_SPEC.html"
+    if html_path.exists():
+        return FileResponse(
+            str(html_path),
+            media_type="text/html",
+            filename="SAMUDRA_RAKSHAK_COMPLETE_TECH_SPEC.html",
+        )
+    return {"error": "Report HTML not found on disk"}
+
+# Static Frontend Production SPA Mount
+FRONTEND_DIST_DIR = settings.BASE_DIR / "frontend" / "dist"
+
+if FRONTEND_DIST_DIR.exists() and (FRONTEND_DIST_DIR / "index.html").exists():
+    assets_dir = FRONTEND_DIST_DIR / "assets"
+    if assets_dir.exists():
+        app.mount("/assets", StaticFiles(directory=str(assets_dir)), name="frontend-assets")
+
+    @app.get("/{full_path:path}", include_in_schema=False)
+    async def serve_spa(full_path: str):
+        target_file = FRONTEND_DIST_DIR / full_path
+        if full_path and target_file.is_file():
+            return FileResponse(str(target_file))
+        return FileResponse(str(FRONTEND_DIST_DIR / "index.html"))
+else:
+    @app.get("/", summary="Root Health Status")
+    async def root():
+        return {
+            "service": settings.PROJECT_NAME,
+            "status": "online",
+            "docs": "/docs",
+            "api": f"{settings.API_PREFIX}/health",
+            "note": "Frontend build not found. Run 'npm run build' inside frontend/ to serve the SPA UI here.",
+        }
 
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("backend.main:app", host="127.0.0.1", port=8000, reload=False)
+    uvicorn.run("backend.main:app", host=settings.HOST, port=settings.PORT, reload=False)

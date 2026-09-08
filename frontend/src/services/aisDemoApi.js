@@ -5,7 +5,8 @@
  * of recorded real AIS telemetry.
  */
 
-const API_BASE = '/api/ais/demo';
+const RAW_API_BASE = import.meta.env.VITE_API_URL || '';
+const API_BASE = RAW_API_BASE ? `${RAW_API_BASE.replace(/\/+$/, '')}/api/ais/demo` : '/api/ais/demo';
 
 export async function getDemoStatus() {
   const res = await fetch(`${API_BASE}/status`);
@@ -83,6 +84,11 @@ export function connectAisDemoWebSocket(handlers = {}) {
   let retryTimeout = null;
 
   const getWsUrl = () => {
+    if (RAW_API_BASE) {
+      const wsProto = RAW_API_BASE.startsWith('https') ? 'wss:' : 'ws:';
+      const cleanHost = RAW_API_BASE.replace(/^https?:\/\//, '').replace(/\/+$/, '');
+      return `${wsProto}//${cleanHost}/api/ais/demo/ws`;
+    }
     const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
     const host = window.location.host;
     return `${protocol}//${host}/api/ais/demo/ws`;

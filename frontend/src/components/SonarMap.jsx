@@ -104,6 +104,20 @@ const BASEMAPS = {
 
 const SEAMARKS_URL = 'https://tiles.openseamap.org/seamark/{z}/{x}/{y}.png';
 
+const WORLD_SECTORS = [
+  { id: 'global', label: '🌍 Global World View', lat: 20.0, lng: 20.0, zoom: 2 },
+  { id: 'palk', label: '🇮🇳 Palk Strait & EEZ', lat: 9.3142, lng: 79.1821, zoom: 11 },
+  { id: 'malacca', label: '🇸🇬 Malacca & Singapore', lat: 1.25, lng: 103.85, zoom: 9 },
+  { id: 'suez', label: '🇪🇬 Suez Canal & Red Sea', lat: 28.5, lng: 33.5, zoom: 7 },
+  { id: 'hormuz', label: '🇦🇪 Strait of Hormuz', lat: 26.2, lng: 56.4, zoom: 8 },
+  { id: 'dover', label: '🇬🇧 English Channel & Dover', lat: 50.8, lng: 0.5, zoom: 8 },
+  { id: 'gibraltar', label: '🇪🇸 Strait of Gibraltar', lat: 35.95, lng: -5.5, zoom: 9 },
+  { id: 'panama', label: '🇵🇦 Panama Canal', lat: 8.95, lng: -79.55, zoom: 9 },
+  { id: 'tokyo', label: '🇯🇵 Tokyo Bay & Pacific', lat: 35.0, lng: 139.7, zoom: 8 },
+  { id: 'la', label: '🇺🇸 US Pacific Coast (LA)', lat: 33.7, lng: -118.2, zoom: 9 },
+  { id: 'cape', label: '🇿🇦 Cape of Good Hope', lat: -34.1, lng: 18.45, zoom: 8 },
+];
+
 export function SonarMap({
   geospatialData,
   selectedTargetId,
@@ -929,15 +943,26 @@ export function SonarMap({
             <span>Labels</span>
           </button>
 
-          {/* World View Zoom Out Shortcut */}
-          <button
-            onClick={handleZoomWorld}
-            title="Zoom Out to Whole World View"
-            className="px-3 py-1 rounded-full border border-border-tactical bg-[#0e1726] hover:bg-[#162235] text-starlight hover:text-white transition text-[11px] font-semibold flex items-center space-x-1 whitespace-nowrap shadow-sm"
-          >
-            <Globe className="w-3.5 h-3.5 text-kesari" />
-            <span>World</span>
-          </button>
+          {/* Global Sector Navigator */}
+          <div className="flex items-center space-x-1 bg-[#070b12] px-2.5 py-1 rounded-full border border-border-tactical shadow-sm">
+            <Globe className="w-3.5 h-3.5 text-kesari flex-shrink-0" />
+            <select
+              onChange={(e) => {
+                const sec = WORLD_SECTORS.find((s) => s.id === e.target.value);
+                if (sec && mapInstanceRef.current) {
+                  mapInstanceRef.current.setView([sec.lat, sec.lng], sec.zoom, { animate: true });
+                }
+              }}
+              defaultValue="palk"
+              className="bg-transparent text-starlight text-[11px] font-mono focus:outline-none cursor-pointer"
+            >
+              {WORLD_SECTORS.map((sec) => (
+                <option key={sec.id} value={sec.id} className="bg-[#070b12] text-starlight">
+                  {sec.label}
+                </option>
+              ))}
+            </select>
+          </div>
 
           {/* Basemap Switcher */}
           <div className="flex items-center space-x-1 bg-[#070b12] px-3 py-1 rounded-full border border-border-tactical">

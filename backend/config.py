@@ -11,12 +11,22 @@ except ImportError:
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+def _parse_cors_origins(raw: str) -> list[str]:
+    if not raw or raw.strip() == "*":
+        return ["*"]
+    return [origin.strip() for origin in raw.split(",") if origin.strip()]
+
 class Settings:
-    PROJECT_NAME: str = "SIH26057 — Side-Scan Sonar Debris & Anomaly Detection"
+    PROJECT_NAME: str = "SIH26057 - Side-Scan Sonar Debris & Anomaly Detection"
     VERSION: str = "1.0.0"
     API_PREFIX: str = "/api"
     
+    # Server Host & Port
+    HOST: str = os.getenv("HOST", "0.0.0.0")
+    PORT: int = int(os.getenv("PORT", "8000"))
+    
     # Paths
+    BASE_DIR: Path = BASE_DIR
     UPLOAD_DIR: Path = BASE_DIR / "data" / "uploads"
     SAMPLES_DIR: Path = BASE_DIR / "data" / "samples"
     WEIGHTS_DIR: Path = BASE_DIR / "ml" / "weights"
@@ -24,8 +34,8 @@ class Settings:
     DB_PATH: Path = BASE_DIR / "sonar_detection.db"
     
     # Model defaults
-    DEFAULT_CONFIDENCE: float = 0.25
-    DEFAULT_IOU: float = 0.45
+    DEFAULT_CONFIDENCE: float = float(os.getenv("DEFAULT_CONFIDENCE", "0.25"))
+    DEFAULT_IOU: float = float(os.getenv("DEFAULT_IOU", "0.45"))
     
     # AIS & Vessel Tracking Configuration
     AIS_API_KEY: str = os.getenv("AIS_API_KEY", "")
@@ -40,7 +50,7 @@ class Settings:
     VESSEL_WARNING_DISTANCE_METERS: float = float(os.getenv("VESSEL_WARNING_DISTANCE_METERS", "500.0"))
     
     # CORS
-    CORS_ORIGINS: list[str] = ["*"]
+    CORS_ORIGINS: list[str] = _parse_cors_origins(os.getenv("CORS_ORIGINS", "*"))
 
     # Maritime Incident Intelligence Configuration (SIH 26057)
     NEWS_API_KEY: str = os.getenv("NEWS_API_KEY", "")

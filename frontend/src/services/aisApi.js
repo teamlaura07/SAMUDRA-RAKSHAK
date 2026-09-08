@@ -5,7 +5,8 @@
  * vessel positions, trajectory tracks, and debris geofence proximity alerts.
  */
 
-const API_BASE = '/api';
+const RAW_API_BASE = import.meta.env.VITE_API_URL || '';
+const API_BASE = RAW_API_BASE ? `${RAW_API_BASE.replace(/\/+$/, '')}/api` : '/api';
 
 /**
  * Fetch current AIS connection status & telemetry metadata.
@@ -84,6 +85,21 @@ export async function clearTestAlerts() {
   return res.json();
 }
 
+/**
+ * Configure or update AISStream API key and bounding box dynamically.
+ */
+export async function configureAis(apiKey, boundingBox = null) {
+  const payload = { api_key: apiKey };
+  if (boundingBox) payload.bounding_box = boundingBox;
+  const res = await fetch(`${API_BASE}/ais/config`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) throw new Error(`Failed to configure AIS: ${res.statusText}`);
+  return res.json();
+}
+
 
 /**
  * WebSocket Connection Manager for live AIS updates.
@@ -104,6 +120,11 @@ export function connectAisWebSocket(handlers = {}) {
   const maxRetryDelay = 30000;
 
   const getWsUrl = () => {
+    if (RAW_API_BASE) {
+      const wsProto = RAW_API_BASE.startsWith('https') ? 'wss:' : 'ws:';
+      const cleanHost = RAW_API_BASE.replace(/^https?:\/\//, '').replace(/\/+$/, '');
+      return `${wsProto}//${cleanHost}/api/ais/ws`;
+    }
     const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
     const host = window.location.host;
     return `${protocol}//${host}/api/ais/ws`;

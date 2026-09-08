@@ -133,16 +133,16 @@ class AisService:
         self._upstream_ws: Optional[Any] = None
         self._lock = asyncio.Lock()
 
-        # Seed initial Indian EEZ fleet
-        self._init_indian_eez_fleet()
+        # Seed initial Global maritime fleet
+        self._init_global_fleet()
 
-    def _init_indian_eez_fleet(self):
-        """Initializes a realistic fleet of commercial and surveillance vessels across the Indian EEZ."""
+    def _init_global_fleet(self):
+        """Initializes a realistic global fleet of commercial, container, tanker, and surveillance vessels worldwide."""
         now_iso = datetime.now(timezone.utc).isoformat()
         now_ts = time.time()
 
         initial_fleet = [
-            # Palk Strait / Gulf of Mannar Sector (Near Survey Zone)
+            # --- Palk Strait & Indian Coastal Waters ---
             {
                 "mmsi": "419000999",
                 "ship_name": "SAGAR KANYA",
@@ -213,7 +213,7 @@ class AisService:
                 "destination": "SETHUSAMUDRAM CHANNEL",
                 "eta": "09-07 19:15",
             },
-            # Mumbai & JNPT Approaches (Arabian Sea)
+            # --- Mumbai & Arabian Sea ---
             {
                 "mmsi": "419001122",
                 "ship_name": "DESH SHANTI",
@@ -256,7 +256,7 @@ class AisService:
                 "destination": "JNPT FAIRWAY",
                 "eta": "09-07 17:00",
             },
-            # Cochin Harbor & Lakshadweep Sea
+            # --- Cochin, Chennai, Vizag, Paradip ---
             {
                 "mmsi": "419002340",
                 "ship_name": "ICGS SAMARTH",
@@ -271,21 +271,6 @@ class AisService:
                 "destination": "MINICOY AIR-SEA ENCLAVE",
                 "eta": "09-08 04:00",
             },
-            {
-                "mmsi": "419003560",
-                "ship_name": "OCEAN DIAMOND",
-                "latitude": 9.8800,
-                "longitude": 76.0500,
-                "speed_knots": 11.4,
-                "course_deg": 85.0,
-                "heading_deg": 85.0,
-                "nav_status": "Under way using engine",
-                "ship_type": "Product Tanker",
-                "imo": "9384721",
-                "destination": "COCHIN REFINERY BERTH",
-                "eta": "09-07 19:45",
-            },
-            # Chennai Port & Ennore (Bay of Bengal TSS)
             {
                 "mmsi": "419006120",
                 "ship_name": "MV BHARAT RATNA",
@@ -314,22 +299,6 @@ class AisService:
                 "destination": "ENNORE LNG TERMINAL",
                 "eta": "09-07 18:30",
             },
-            # Porbandar & Gujarat SLOC
-            {
-                "mmsi": "419901428",
-                "ship_name": "JAL KANYA",
-                "latitude": 21.5600,
-                "longitude": 69.2000,
-                "speed_knots": 2.2,
-                "course_deg": 145.0,
-                "heading_deg": 145.0,
-                "nav_status": "Not under command",
-                "ship_type": "Fishing Trawler",
-                "imo": None,
-                "destination": "PORBANDAR ANCHORAGE",
-                "eta": "09-07 19:00",
-            },
-            # Visakhapatnam & Paradip
             {
                 "mmsi": "419008230",
                 "ship_name": "VIZAG PATRIOT",
@@ -357,6 +326,335 @@ class AisService:
                 "imo": "9423871",
                 "destination": "PARADIP HARBOR",
                 "eta": "09-07 23:00",
+            },
+            # --- Strait of Malacca & Singapore Strait (Global Megachannel) ---
+            {
+                "mmsi": "353136000",
+                "ship_name": "EVER GIVEN",
+                "latitude": 1.2650,
+                "longitude": 103.8200,
+                "speed_knots": 14.8,
+                "course_deg": 108.0,
+                "heading_deg": 108.0,
+                "nav_status": "Under way using engine",
+                "ship_type": "Ultra Large Container Vessel (ULCV)",
+                "imo": "9811000",
+                "destination": "SINGAPORE PSA",
+                "eta": "09-08 02:00",
+            },
+            {
+                "mmsi": "228392800",
+                "ship_name": "CMA CGM JACQUES SAADE",
+                "latitude": 2.4500,
+                "longitude": 101.8500,
+                "speed_knots": 18.2,
+                "course_deg": 135.0,
+                "heading_deg": 135.0,
+                "nav_status": "Under way using engine",
+                "ship_type": "LNG Powered Container Ship",
+                "imo": "9839179",
+                "destination": "PORT KLANG",
+                "eta": "09-07 23:30",
+            },
+            {
+                "mmsi": "352001999",
+                "ship_name": "MSC GULSUN",
+                "latitude": 1.1800,
+                "longitude": 103.9500,
+                "speed_knots": 16.0,
+                "course_deg": 285.0,
+                "heading_deg": 285.0,
+                "nav_status": "Under way using engine",
+                "ship_type": "Megamax-24 Container Ship",
+                "imo": "9839434",
+                "destination": "SUEZ CANAL",
+                "eta": "09-14 12:00",
+            },
+            {
+                "mmsi": "563001222",
+                "ship_name": "SINGAPORE PILOT 01",
+                "latitude": 1.2400,
+                "longitude": 103.8700,
+                "speed_knots": 11.2,
+                "course_deg": 45.0,
+                "heading_deg": 45.0,
+                "nav_status": "Under way using engine",
+                "ship_type": "Pilot Vessel",
+                "imo": "9781230",
+                "destination": "EASTERN ANCHORAGE",
+                "eta": "09-07 17:30",
+            },
+            # --- Suez Canal, Red Sea & Bab el-Mandeb ---
+            {
+                "mmsi": "440123000",
+                "ship_name": "HMM ALGECIRAS",
+                "latitude": 29.9800,
+                "longitude": 32.5600,
+                "speed_knots": 8.2,
+                "course_deg": 178.0,
+                "heading_deg": 178.0,
+                "nav_status": "Under way using engine",
+                "ship_type": "Container Ship (24K TEU)",
+                "imo": "9863297",
+                "destination": "SUEZ SOUTHBOUND",
+                "eta": "09-07 19:00",
+            },
+            {
+                "mmsi": "538008123",
+                "ship_name": "FRONT ALTAIR",
+                "latitude": 27.5000,
+                "longitude": 34.2000,
+                "speed_knots": 13.8,
+                "course_deg": 155.0,
+                "heading_deg": 155.0,
+                "nav_status": "Under way using engine",
+                "ship_type": "VLCC Crude Carrier",
+                "imo": "9745120",
+                "destination": "YANBU RED SEA",
+                "eta": "09-08 08:00",
+            },
+            {
+                "mmsi": "622123456",
+                "ship_name": "SUEZ GUARDIAN TUG",
+                "latitude": 30.5800,
+                "longitude": 32.3200,
+                "speed_knots": 7.0,
+                "course_deg": 180.0,
+                "heading_deg": 180.0,
+                "nav_status": "Restricted manoeuverability",
+                "ship_type": "Escort Tug",
+                "imo": "9812400",
+                "destination": "ISMAILIA CONVOY",
+                "eta": "09-07 18:30",
+            },
+            # --- Strait of Hormuz & Persian Gulf ---
+            {
+                "mmsi": "470123000",
+                "ship_name": "RASGAS LNG PIONEER",
+                "latitude": 26.3500,
+                "longitude": 56.4000,
+                "speed_knots": 16.5,
+                "course_deg": 120.0,
+                "heading_deg": 120.0,
+                "nav_status": "Under way using engine",
+                "ship_type": "Q-Max LNG Carrier",
+                "imo": "9397120",
+                "destination": "DAHEJ INDIA",
+                "eta": "09-10 14:00",
+            },
+            {
+                "mmsi": "470998877",
+                "ship_name": "FUJAIRAH BUNKERS 08",
+                "latitude": 25.1800,
+                "longitude": 56.3800,
+                "speed_knots": 4.0,
+                "course_deg": 90.0,
+                "heading_deg": 90.0,
+                "nav_status": "Moored",
+                "ship_type": "Bunkering Tanker",
+                "imo": "9412999",
+                "destination": "FUJAIRAH ANCHORAGE",
+                "eta": "09-07 20:00",
+            },
+            {
+                "mmsi": "311000543",
+                "ship_name": "HORMUZ CENTURION",
+                "latitude": 26.5500,
+                "longitude": 56.2500,
+                "speed_knots": 14.0,
+                "course_deg": 235.0,
+                "heading_deg": 235.0,
+                "nav_status": "Under way using engine",
+                "ship_type": "Suezmax Crude Tanker",
+                "imo": "9654321",
+                "destination": "RAS TANURA",
+                "eta": "09-08 05:00",
+            },
+            # --- English Channel, Dover Strait & North Sea ---
+            {
+                "mmsi": "219018000",
+                "ship_name": "MAERSK MC-KINNEY MOLLER",
+                "latitude": 51.0500,
+                "longitude": 1.4500,
+                "speed_knots": 17.5,
+                "course_deg": 48.0,
+                "heading_deg": 48.0,
+                "nav_status": "Under way using engine",
+                "ship_type": "Triple-E Container Vessel",
+                "imo": "9619907",
+                "destination": "ROTTERDAM GATEWAY",
+                "eta": "09-08 01:00",
+            },
+            {
+                "mmsi": "235089123",
+                "ship_name": "DOVER SEAWAYS",
+                "latitude": 51.1200,
+                "longitude": 1.3400,
+                "speed_knots": 21.0,
+                "course_deg": 125.0,
+                "heading_deg": 125.0,
+                "nav_status": "Under way using engine",
+                "ship_type": "Ro-Ro Passenger Ferry",
+                "imo": "9318345",
+                "destination": "CALAIS PORT",
+                "eta": "09-07 17:45",
+            },
+            {
+                "mmsi": "244123000",
+                "ship_name": "ROTTERDAM EXPRESS",
+                "latitude": 51.9500,
+                "longitude": 3.9800,
+                "speed_knots": 12.0,
+                "course_deg": 95.0,
+                "heading_deg": 95.0,
+                "nav_status": "Under way using engine",
+                "ship_type": "Chemical Tanker",
+                "imo": "9543210",
+                "destination": "EUROPOORT ROTTERDAM",
+                "eta": "09-07 19:30",
+            },
+            # --- Strait of Gibraltar & Mediterranean Sea ---
+            {
+                "mmsi": "247385600",
+                "ship_name": "COSTA FIRENZE",
+                "latitude": 35.9800,
+                "longitude": -5.6000,
+                "speed_knots": 19.4,
+                "course_deg": 85.0,
+                "heading_deg": 85.0,
+                "nav_status": "Under way using engine",
+                "ship_type": "Passenger Cruise Ship",
+                "imo": "9801689",
+                "destination": "BARCELONA",
+                "eta": "09-08 10:00",
+            },
+            {
+                "mmsi": "224567000",
+                "ship_name": "GIBRALTAR STRAIT PILOT",
+                "latitude": 36.1400,
+                "longitude": -5.3500,
+                "speed_knots": 10.0,
+                "course_deg": 270.0,
+                "heading_deg": 270.0,
+                "nav_status": "Under way using engine",
+                "ship_type": "Pilot Vessel",
+                "imo": "9812900",
+                "destination": "ALGECIRAS BAY",
+                "eta": "09-07 17:15",
+            },
+            {
+                "mmsi": "210987000",
+                "ship_name": "MEDITERRANEAN CARRIER",
+                "latitude": 37.5000,
+                "longitude": 12.2000,
+                "speed_knots": 15.5,
+                "course_deg": 110.0,
+                "heading_deg": 110.0,
+                "nav_status": "Under way using engine",
+                "ship_type": "Container Ship",
+                "imo": "9612876",
+                "destination": "PIRAEUS GREECE",
+                "eta": "09-09 14:00",
+            },
+            # --- Panama Canal & Caribbean Sea ---
+            {
+                "mmsi": "355123456",
+                "ship_name": "PACIFIC BREEZE",
+                "latitude": 8.9500,
+                "longitude": -79.5600,
+                "speed_knots": 6.5,
+                "course_deg": 320.0,
+                "heading_deg": 320.0,
+                "nav_status": "Under way using engine",
+                "ship_type": "Neopanamax Container Ship",
+                "imo": "9741234",
+                "destination": "PANAMA CANAL TRANSIT",
+                "eta": "09-07 21:00",
+            },
+            {
+                "mmsi": "311000123",
+                "ship_name": "CARIBBEAN PRINCESS",
+                "latitude": 18.2000,
+                "longitude": -65.5000,
+                "speed_knots": 20.2,
+                "course_deg": 280.0,
+                "heading_deg": 280.0,
+                "nav_status": "Under way using engine",
+                "ship_type": "Cruise Ship",
+                "imo": "9215490",
+                "destination": "SAN JUAN PUERTO RICO",
+                "eta": "09-08 07:00",
+            },
+            # --- Pacific, East Asia & Atlantic Corridors ---
+            {
+                "mmsi": "431001234",
+                "ship_name": "ONE APUS",
+                "latitude": 34.6000,
+                "longitude": 139.8000,
+                "speed_knots": 18.0,
+                "course_deg": 190.0,
+                "heading_deg": 190.0,
+                "nav_status": "Under way using engine",
+                "ship_type": "Magenta Container Ship",
+                "imo": "9826914",
+                "destination": "TOKYO BAY",
+                "eta": "09-07 20:00",
+            },
+            {
+                "mmsi": "477123987",
+                "ship_name": "OOCL HONG KONG",
+                "latitude": 22.2500,
+                "longitude": 114.1500,
+                "speed_knots": 16.5,
+                "course_deg": 145.0,
+                "heading_deg": 145.0,
+                "nav_status": "Under way using engine",
+                "ship_type": "Container Ship (21.4K TEU)",
+                "imo": "9776171",
+                "destination": "HONG KONG HARBOR",
+                "eta": "09-07 18:30",
+            },
+            {
+                "mmsi": "368123000",
+                "ship_name": "LOS ANGELES EXPRESS",
+                "latitude": 33.7200,
+                "longitude": -118.2600,
+                "speed_knots": 11.0,
+                "course_deg": 75.0,
+                "heading_deg": 75.0,
+                "nav_status": "Under way using engine",
+                "ship_type": "Container Ship",
+                "imo": "9345100",
+                "destination": "PORT OF LOS ANGELES",
+                "eta": "09-07 22:00",
+            },
+            {
+                "mmsi": "503001234",
+                "ship_name": "SYDNEY MARINER",
+                "latitude": -33.8500,
+                "longitude": 151.2500,
+                "speed_knots": 13.2,
+                "course_deg": 60.0,
+                "heading_deg": 60.0,
+                "nav_status": "Under way using engine",
+                "ship_type": "General Cargo",
+                "imo": "9512800",
+                "destination": "PORT BOTANY SYDNEY",
+                "eta": "09-08 06:30",
+            },
+            {
+                "mmsi": "601123456",
+                "ship_name": "CAPE TOWN TRADER",
+                "latitude": -34.1000,
+                "longitude": 18.4500,
+                "speed_knots": 15.0,
+                "course_deg": 290.0,
+                "heading_deg": 290.0,
+                "nav_status": "Under way using engine",
+                "ship_type": "Bulk Carrier",
+                "imo": "9451299",
+                "destination": "CAPE OF GOOD HOPE ROUTE",
+                "eta": "09-08 18:00",
             }
         ]
 
@@ -562,70 +860,85 @@ class AisService:
                 await self._task
             except asyncio.CancelledError:
                 pass
-            self._task = None
         self._status = AisConnectionStatus.OFFLINE
+        self._remote_task: Optional[asyncio.Task] = None
+        if self._remote_task:
+            self._remote_task.cancel()
         logger.info("AIS Background Ingestion Service stopped.")
 
-    async def _run_loop(self):
-        """Main lifecycle loop handling live AISStream WebSocket or fallback kinematics."""
-        api_key = (settings.AISSTREAM_API_KEY or "").strip()
-        
-        # If API key is available, attempt live WebSocket
-        if api_key:
-            logger.info("AISStream API Key detected. Connecting to remote WebSocket feed...")
-            retry_delay = 1
-            max_retry_delay = 60
+    def set_api_key(self, api_key: str):
+        """Sets or updates the AISStream API Key and triggers a remote connection attempt."""
+        api_key = (api_key or "").strip()
+        settings.AISSTREAM_API_KEY = api_key
+        settings.AIS_API_KEY = api_key
+        logger.info(f"AISStream API Key updated (length: {len(api_key)}). Restarting remote stream listener...")
+        if self._running:
+            if hasattr(self, '_remote_task') and self._remote_task:
+                self._remote_task.cancel()
+            if api_key:
+                self._remote_task = asyncio.create_task(self._remote_stream_loop(api_key))
 
-            while self._running:
-                try:
-                    self._status = AisConnectionStatus.CONNECTING
+    async def _remote_stream_loop(self, api_key: str):
+        """Asynchronous worker listening to upstream wss://stream.aisstream.io/v0/stream."""
+        retry_delay = 2
+        max_retry_delay = 60
+
+        while self._running:
+            try:
+                logger.info("Connecting to live upstream AISStream WebSocket (wss://stream.aisstream.io/v0/stream)...")
+                async with websockets.connect(
+                    settings.AISSTREAM_WS_URL,
+                    ping_interval=20,
+                    ping_timeout=20,
+                    close_timeout=10,
+                ) as ws:
+                    self._upstream_ws = ws
+                    subscription_payload = {
+                        "APIKey": api_key,
+                        "BoundingBoxes": [
+                            [
+                                [self._bbox.min_latitude, self._bbox.min_longitude],
+                                [self._bbox.max_latitude, self._bbox.max_longitude],
+                            ]
+                        ],
+                        "FilterMessageTypes": [
+                            "PositionReport",
+                            "StandardClassBPositionReport",
+                            "ExtendedClassBPositionReport",
+                            "ShipStaticData",
+                        ],
+                    }
+                    await ws.send(json.dumps(subscription_payload))
+                    self._status = AisConnectionStatus.LIVE
+                    retry_delay = 2
+                    logger.info("AISStream remote live connection established successfully.")
                     await self.broadcast_event("status_change", {"status": self._status.value})
 
-                    async with websockets.connect(
-                        settings.AISSTREAM_WS_URL,
-                        ping_interval=20,
-                        ping_timeout=20,
-                        close_timeout=10,
-                    ) as ws:
-                        self._upstream_ws = ws
-                        subscription_payload = {
-                            "APIKey": api_key,
-                            "BoundingBoxes": [
-                                [
-                                    [self._bbox.min_latitude, self._bbox.min_longitude],
-                                    [self._bbox.max_latitude, self._bbox.max_longitude],
-                                ]
-                            ],
-                            "FilterMessageTypes": [
-                                "PositionReport",
-                                "StandardClassBPositionReport",
-                                "ExtendedClassBPositionReport",
-                                "ShipStaticData",
-                            ],
-                        }
-                        await ws.send(json.dumps(subscription_payload))
-                        self._status = AisConnectionStatus.LIVE
-                        retry_delay = 1
-                        logger.info("AISStream remote live connection established.")
-                        await self.broadcast_event("status_change", {"status": self._status.value})
+                    async for raw_message in ws:
+                        if not self._running:
+                            break
+                        try:
+                            msg_dict = json.loads(raw_message)
+                            await self._handle_ais_message(msg_dict)
+                        except Exception as parse_err:
+                            logger.debug(f"Error parsing AIS payload: {parse_err}")
 
-                        async for raw_message in ws:
-                            if not self._running:
-                                break
-                            try:
-                                msg_dict = json.loads(raw_message)
-                                await self._handle_ais_message(msg_dict)
-                            except Exception as parse_err:
-                                logger.debug(f"Error parsing AIS payload: {parse_err}")
+            except asyncio.CancelledError:
+                break
+            except Exception as conn_err:
+                logger.warning(f"AISStream remote connection notice ({conn_err}). Retrying in {retry_delay}s...")
+                self._upstream_ws = None
+                await asyncio.sleep(retry_delay)
+                retry_delay = min(retry_delay * 2, max_retry_delay)
 
-                except asyncio.CancelledError:
-                    break
-                except Exception as conn_err:
-                    logger.warning(f"AISStream remote connection unavailable ({conn_err}). Transitioning to Indian EEZ kinematic engine.")
-                    self._upstream_ws = None
-                    break
+    async def _run_loop(self):
+        """Main lifecycle loop handling live AISStream WebSocket and continuous kinematics."""
+        api_key = (settings.AISSTREAM_API_KEY or "").strip()
+        
+        # If API key is present on startup, launch remote stream task
+        if api_key:
+            self._remote_task = asyncio.create_task(self._remote_stream_loop(api_key))
 
-        # Active Indian EEZ Kinematic Simulation Loop (operates continuously)
         self._status = AisConnectionStatus.LIVE
         await self.broadcast_event("status_change", {"status": self._status.value})
         logger.info("Active Indian EEZ real-time vessel telemetry engine running.")
@@ -662,9 +975,18 @@ class AisService:
             new_lat = vessel.latitude + delta_lat
             new_lng = vessel.longitude + delta_lng
 
-            # Bounce if out of broader EEZ boundary box
-            if new_lat < 5.0 or new_lat > 25.0 or new_lng < 65.0 or new_lng > 90.0:
-                course_deg = (course_deg + 180.0) % 360.0
+            # Global coordinates wrap-around and polar boundary handling
+            if new_lng > 180.0:
+                new_lng -= 360.0
+            elif new_lng < -180.0:
+                new_lng += 360.0
+
+            if new_lat > 80.0:
+                new_lat = 80.0
+                course_deg = 180.0
+            elif new_lat < -75.0:
+                new_lat = -75.0
+                course_deg = 0.0
 
             updated_vessel = vessel.model_copy(update={
                 "latitude": round(new_lat, 6),

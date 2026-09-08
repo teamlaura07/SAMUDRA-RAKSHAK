@@ -68,6 +68,35 @@ async def get_proximity_alerts(
 
 
 @router.post(
+    "/config",
+    summary="Update AISStream API key and subscription parameters dynamically",
+)
+async def update_ais_config(
+    payload: Dict[str, Any],
+    service: AisService = Depends(get_ais_service),
+) -> Dict[str, Any]:
+    """Updates AISStream API Key and triggers live WebSocket connection."""
+    api_key = payload.get("api_key")
+    if api_key is not None:
+        service.set_api_key(api_key)
+    
+    bbox_dict = payload.get("bounding_box")
+    if bbox_dict and isinstance(bbox_dict, dict):
+        service.set_bounding_box(
+            min_lat=float(bbox_dict.get("min_latitude", -90.0)),
+            min_lon=float(bbox_dict.get("min_longitude", -180.0)),
+            max_lat=float(bbox_dict.get("max_latitude", 90.0)),
+            max_lon=float(bbox_dict.get("max_longitude", 180.0)),
+        )
+    return {
+        "status": "configured",
+        "is_configured": True,
+        "has_api_key": bool(api_key),
+        "bounding_box": service.bbox.model_dump(),
+    }
+
+
+@router.post(
     "/bbox",
     summary="Update geographic survey bounding box for AISStream subscription",
 )
